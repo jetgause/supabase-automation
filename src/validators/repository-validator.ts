@@ -145,7 +145,9 @@ export class RepositoryValidator {
    */
   private getRepositoryName(repository: string): string {
     // If it's a URL, extract the repository name
-    if (repository.includes('github.com') || repository.includes('http')) {
+    // Use a more specific pattern to match GitHub URLs
+    const githubUrlPattern = /^https?:\/\/(www\.)?github\.com\//;
+    if (githubUrlPattern.test(repository)) {
       const parts = repository.split('/');
       return parts[parts.length - 1].replace('.git', '');
     }
