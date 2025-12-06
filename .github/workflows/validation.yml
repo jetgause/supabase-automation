@@ -1,0 +1,53 @@
+name: Repository Validation
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  schedule:
+    # Run validation every 6 hours
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Build project
+      run: npm run build
+      
+    - name: Run validation
+      run: npm run validate
+      env:
+        SUPABASE_AUTOMATION_REPO: https://github.com/jetgause/supabase-automation
+        VIXGUARDIAN_REPO: https://github.com/jetgause/VixGuardian
+        ENABLE_AUTO_REPAIR: true
+        ENABLE_VALIDATION_LOGGING: true
+        LOG_LEVEL: info
+        
+    - name: Upload validation logs
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: validation-logs
+        path: logs/
+        retention-days: 30
+        
+    - name: Notify on failure
+      if: failure()
+      run: |
+        echo "::error::Repository validation failed. Check logs for details."
