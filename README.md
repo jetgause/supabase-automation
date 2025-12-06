@@ -148,3 +148,12 @@ npm run format
 ## License
 
 MIT
+
+## Documentation
+
+For detailed information, see the documentation in the `docs/` directory:
+
+- [API Documentation](docs/API.md) - Complete API reference with examples
+- [Architecture](docs/ARCHITECTURE.md) - System design and component details
+- [Security](docs/SECURITY.md) - Security features and best practices
+- [Deployment](docs/DEPLOYMENT.md) - Deployment guide for various platforms
