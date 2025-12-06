@@ -103,12 +103,12 @@ export class PaperTradingService {
     side: 'buy' | 'sell',
     quantity: number,
     price: number,
-    symbol?: string
+    symbol: string
   ): Position {
     if (!currentPosition) {
       // New position
       return {
-        symbol: symbol || '',
+        symbol,
         quantity: side === 'buy' ? quantity : -quantity,
         averagePrice: price,
         unrealizedPnL: 0,
