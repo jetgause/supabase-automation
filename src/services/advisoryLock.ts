@@ -51,11 +51,11 @@ export class AdvisoryLockService {
     const lockTimeout = timeout || this.timeout;
 
     try {
-      // Set statement timeout
-      await client.query(`SET statement_timeout = ${lockTimeout}`);
+      // Set statement timeout using parameterized query
+      await client.query('SET statement_timeout = $1', [lockTimeout]);
 
-      // Try to acquire advisory lock (blocking)
-      // pg_advisory_lock waits until lock is available or timeout occurs
+      // Try to acquire advisory lock (non-blocking)
+      // pg_try_advisory_lock returns immediately with true/false
       const result = await client.query(
         'SELECT pg_try_advisory_lock($1) as acquired',
         [lockId]
