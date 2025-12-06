@@ -144,12 +144,20 @@ export class RepositoryValidator {
    * Extract repository name from URL or full path
    */
   private getRepositoryName(repository: string): string {
-    // If it's a URL, extract the repository name
-    // Use a more specific pattern to match GitHub URLs
+    // If it's a URL, extract the repository name using URL constructor
     const githubUrlPattern = /^https?:\/\/(www\.)?github\.com\//;
     if (githubUrlPattern.test(repository)) {
-      const parts = repository.split('/');
-      return parts[parts.length - 1].replace('.git', '');
+      try {
+        const url = new URL(repository);
+        const pathParts = url.pathname.split('/').filter((part) => part.length > 0);
+        if (pathParts.length >= 2) {
+          // GitHub URLs are typically: /owner/repo or /owner/repo.git
+          return pathParts[pathParts.length - 1].replace(/\.git$/, '');
+        }
+      } catch (error) {
+        // If URL parsing fails, fall back to original method
+        this.logger.warn('Failed to parse repository URL', { repository, error });
+      }
     }
     // Otherwise, assume it's already a repository name
     return repository;

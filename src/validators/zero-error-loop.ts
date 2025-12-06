@@ -24,6 +24,7 @@ export class ZeroErrorLoop {
   private isRunning = false;
   private intervalMs: number;
   private intervalId?: NodeJS.Timeout;
+  private isValidating = false; // Track if a validation cycle is in progress
 
   constructor(validator: RepositoryValidator, logger: Logger, intervalMs = 60000) {
     this.validator = validator;
@@ -53,6 +54,12 @@ export class ZeroErrorLoop {
 
     // Then run on interval
     this.intervalId = setInterval(() => {
+      // Skip if previous cycle is still running
+      if (this.isValidating) {
+        this.logger.warn('Previous validation cycle still in progress, skipping this interval');
+        return;
+      }
+      
       this.runValidationCycle().catch((error) => {
         this.logger.error('Error in validation cycle', { error });
       });
@@ -82,6 +89,17 @@ export class ZeroErrorLoop {
    * Run a single validation cycle
    */
   private async runValidationCycle(): Promise<ErrorDetectionResult> {
+    if (this.isValidating) {
+      this.logger.warn('Validation cycle already in progress, skipping');
+      return {
+        errorsDetected: 0,
+        errorsRepaired: 0,
+        unrepairedErrors: [],
+        timestamp: new Date(),
+      };
+    }
+
+    this.isValidating = true;
     this.logger.info('Running validation cycle');
 
     const result: ErrorDetectionResult = {
@@ -144,6 +162,8 @@ export class ZeroErrorLoop {
     } catch (error) {
       this.logger.error('Critical error in validation cycle', { error });
       throw error;
+    } finally {
+      this.isValidating = false;
     }
 
     return result;

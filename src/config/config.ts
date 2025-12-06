@@ -8,8 +8,26 @@ import { AppConfig, RoutingRulesSchema } from './types';
 export function loadConfig(): AppConfig {
   // Load routing rules from JSON file
   const routingRulesPath = path.join(__dirname, 'routing-rules.json');
-  const routingRulesData = fs.readFileSync(routingRulesPath, 'utf-8');
-  const routingRules = RoutingRulesSchema.parse(JSON.parse(routingRulesData));
+  
+  let routingRulesData: string;
+  try {
+    routingRulesData = fs.readFileSync(routingRulesPath, 'utf-8');
+  } catch (error) {
+    throw new Error(
+      `Failed to load routing rules from ${routingRulesPath}. ` +
+      `Please ensure the file exists and is readable. Error: ${error}`
+    );
+  }
+
+  let routingRules;
+  try {
+    routingRules = RoutingRulesSchema.parse(JSON.parse(routingRulesData));
+  } catch (error) {
+    throw new Error(
+      `Failed to parse routing rules from ${routingRulesPath}. ` +
+      `Please check the JSON syntax and schema. Error: ${error}`
+    );
+  }
 
   // Load environment variables with defaults
   const config: AppConfig = {
