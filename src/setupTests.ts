@@ -1,0 +1,23 @@
+// Setup test environment variables before any imports
+process.env.DATABASE_URL = 'postgresql://test:test@localhost:5432/test';
+process.env.POSTGRES_HOST = 'localhost';
+process.env.POSTGRES_PORT = '5432';
+process.env.POSTGRES_DATABASE = 'test';
+process.env.POSTGRES_USER = 'test';
+process.env.POSTGRES_PASSWORD = 'test';
+process.env.REDIS_HOST = 'localhost';
+process.env.REDIS_PORT = '6379';
+process.env.REDIS_PASSWORD = '';
+process.env.REDIS_DB = '0';
+process.env.SUPABASE_URL = 'https://test.supabase.co';
+process.env.SUPABASE_ANON_KEY = 'test-anon-key';
+process.env.SUPABASE_SERVICE_KEY = 'test-service-key';
+process.env.PORT = '3000';
+process.env.NODE_ENV = 'test';
+process.env.API_KEY_SECRET = 'test-secret-key-with-at-least-32-characters';
+process.env.API_KEYS = '';
+process.env.CACHE_MEMORY_TTL = '300';
+process.env.CACHE_REDIS_TTL = '3600';
+process.env.CACHE_MAX_MEMORY_SIZE = '100';
+process.env.PAPER_TRADING_ENABLED = 'true';
+process.env.ADVISORY_LOCK_TIMEOUT = '30000';
