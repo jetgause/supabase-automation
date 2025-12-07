@@ -1,0 +1,30 @@
+{
+  "repositories": {
+    "supabase-automation": {
+      "url": "https://github.com/jetgause/supabase-automation",
+      "dataTypes": [
+        "automation-config",
+        "workflow-definitions",
+        "validation-rules",
+        "repository-mappings"
+      ],
+      "priority": 1
+    },
+    "VixGuardian": {
+      "url": "https://github.com/jetgause/VixGuardian",
+      "dataTypes": [
+        "trading-data",
+        "market-analysis",
+        "paper-trading",
+        "guardian-config"
+      ],
+      "priority": 2
+    }
+  },
+  "defaultRepository": "supabase-automation",
+  "validationRules": {
+    "requireExactMatch": true,
+    "allowFallback": true,
+    "fallbackRepository": "supabase-automation"
+  }
+}
